@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: go-app-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    #cert-manager.io/cluster-issuer: letsencrypt-staging
+
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - demo.jonsnows.com
+      #secretName: letsencrypt-staging
+      #secretName: letsencrypt-staging-secret
+      secretName: letsencrypt-staging-cert
+  rules:
+  - host: demo.jonsnows.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: go-app
+            port:
+              number: 4000
